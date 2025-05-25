@@ -2,9 +2,8 @@ name: Log ISS Location Data Daily
 
 on:
   schedule:
-    # Runs at 12:00 UTC (noon) every day
     - cron: "0 12 * * *"
-  workflow_dispatch: # Allows manual triggering
+  workflow_dispatch:
 
 jobs:
   collect-iss-data:
@@ -16,6 +15,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: 23f3000325@ds.study.iitm.ac.in  # ✅ REQUIRED STEP
+        run: echo "Hello from my GitHub Action!"
+
       - name: Install uv
         uses: astral-sh/setup-uv@v5
 
@@ -23,7 +25,6 @@ jobs:
         run: | # python
           uv run --with requests python << 'EOF'
           import requests
-
           data = requests.get('http://api.open-notify.org/iss-now.json').text
           with open('iss-location.jsonl', 'a') as f:
               f.write(data + '\n')
